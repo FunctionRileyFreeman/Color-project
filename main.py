@@ -1,11 +1,12 @@
 import pygame
 import sys
+import string
 
 # Initialize Pygame
 pygame.init()
 
 # Set the dimensions of the window
-width, height = 800, 300
+width, height = 800, 600  # Increased height for bigger grid
 screen = pygame.display.set_mode((width, height))
 
 # Define colors
@@ -41,12 +42,14 @@ colors = {
 # Function to draw the encoded message
 def draw_encoded_message(message, grid_size):
     for i, char in enumerate(message):
-        if char != " ":
-            upper_char = char.upper()  # Convert to uppercase for color mapping
-            color = colors.get(upper_char, (255, 255, 255))  # Default to white if color not found
-            pygame.draw.rect(screen, color, (i * grid_size, 100, grid_size, grid_size))
-            if char.isupper():
-                pygame.draw.rect(screen, (0, 0, 0), (i * grid_size, 100, grid_size, grid_size), 3)
+        if char in string.punctuation or char == " ":  # Treat punctuation and space as blank
+            continue  # Skip drawing for punctuation and spaces
+
+        upper_char = char.upper()  # Convert to uppercase for color mapping
+        color = colors.get(upper_char, (255, 255, 255))  # Default to white if color not found
+        pygame.draw.rect(screen, color, (i * grid_size, 100, grid_size, grid_size))
+        if char.isupper():
+            pygame.draw.rect(screen, (0, 0, 0), (i * grid_size, 100, grid_size, grid_size), 3)
 
 # Text input box settings
 font = pygame.font.Font(None, 32)
@@ -76,7 +79,7 @@ while not done:
             if active:
                 if event.key == pygame.K_RETURN:
                     screen.fill((255, 255, 255))  # Clear the screen
-                    draw_encoded_message(text, 50)  # Draw the message in cipher
+                    draw_encoded_message(text, 100)  # Draw the message with bigger grid size
                     text = ''
                 elif event.key == pygame.K_BACKSPACE:
                     text = text[:-1]
@@ -85,9 +88,9 @@ while not done:
 
     # Render the input box and current text
     txt_surface = font.render(text, True, color)
-    width = max(200, txt_surface.get_width()+10)
+    width = max(200, txt_surface.get_width() + 10)
     input_box.w = width
-    screen.blit(txt_surface, (input_box.x+5, input_box.y+5))
+    screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
     pygame.draw.rect(screen, color, input_box, 2)
 
     pygame.display.flip()
