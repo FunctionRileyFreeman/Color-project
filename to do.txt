@@ -1,0 +1,2 @@
+make radom everytime 
+define pattern for bold font ittalics ext
