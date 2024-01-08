@@ -1,7 +1,7 @@
 import pygame
 import sys
-import string
 import pyperclip
+import string
 
 # Initialize Pygame
 pygame.init()
@@ -43,17 +43,47 @@ colors = {
     "Z": (57, 255, 20),     # Zucchini (Green)
 }
 
-# Function to draw the encoded message with a smaller grid size
+# Function to draw the encoded message with custom designs for text styles
 def draw_encoded_message(message, grid_size):
     for i, char in enumerate(message):
-        if char in string.punctuation or char == " ":
-            continue
         upper_char = char.upper()
         color = colors.get(upper_char, (255, 255, 255))
         x_pos = (i % (width // grid_size)) * grid_size
         y_pos = (i // (width // grid_size)) * grid_size + 100
-        pygame.draw.rect(screen, color, (x_pos, y_pos, grid_size, grid_size))
-        if char.isupper():
+
+        # Draw clear backdrop square
+        pygame.draw.rect(screen, (255, 255, 255), (x_pos, y_pos, grid_size, grid_size))
+
+        # Draw custom designs for markers "*", "_", ",", "-", "#", "!", and "."
+        if char == "*":
+            # Bold: Draw a smaller square in the middle
+            inner_size = grid_size // 2
+            inner_x = x_pos + (grid_size - inner_size) // 2
+            inner_y = y_pos + (grid_size - inner_size) // 2
+            pygame.draw.rect(screen, color, (inner_x, inner_y, inner_size, inner_size))
+        elif char == "_":
+            # Italics: Draw a diagonal line through the square
+            pygame.draw.line(screen, (0, 0, 0), (x_pos, y_pos), (x_pos + grid_size, y_pos + grid_size), 2)
+        elif char == ",":
+            pygame.draw.arc(screen, (0, 0, 0), (x_pos, y_pos + grid_size - 15, grid_size, 15), 0, 3.14159265359, 2)
+        elif char == "-":
+            pygame.draw.line(screen, (0, 0, 0), (x_pos, y_pos + grid_size // 2), (x_pos + grid_size, y_pos + grid_size // 2), 2)
+        elif char == "#":
+            line_thickness = 2
+            pygame.draw.line(screen, (0, 0, 0), (x_pos + line_thickness, y_pos + line_thickness), (x_pos + grid_size - line_thickness, y_pos + line_thickness), line_thickness)
+            pygame.draw.line(screen, (0, 0, 0), (x_pos + line_thickness, y_pos + grid_size // 4), (x_pos + grid_size - line_thickness, y_pos + grid_size // 4), line_thickness)
+            pygame.draw.line(screen, (0, 0, 0), (x_pos + line_thickness, y_pos + grid_size // 2), (x_pos + grid_size - line_thickness, y_pos + grid_size // 2), line_thickness)
+            pygame.draw.line(screen, (0, 0, 0), (x_pos + line_thickness, y_pos + grid_size // 4 * 3), (x_pos + grid_size - line_thickness, y_pos + grid_size // 4 * 3), line_thickness)
+        elif char == "!":
+            pygame.draw.line(screen, (0, 0, 0), (x_pos + grid_size // 2, y_pos + grid_size // 2), (x_pos + grid_size // 2, y_pos + grid_size - 2), 2)
+        elif char == ".":
+            pygame.draw.circle(screen, (0, 0, 0), (x_pos + grid_size // 2, y_pos + grid_size - 2), 2)
+
+        # Draw the letter in the square
+        if char != "*" and char != "_":
+            pygame.draw.rect(screen, color, (x_pos, y_pos, grid_size, grid_size))
+
+        if char.isupper() and char != "*" and char != "_":
             pygame.draw.rect(screen, (0, 0, 0), (x_pos, y_pos, grid_size, grid_size), 3)
 
 # Text input box settings
@@ -61,47 +91,41 @@ font = pygame.font.Font(None, 32)
 input_box = pygame.Rect(50, 50, 140, 32)
 color_inactive = pygame.Color('lightskyblue3')
 color_active = pygame.Color('dodgerblue2')
-color = color_inactive
-active = False
+color = color_active  # Input bar is always active
 text = ''
 done = False
 
-grid_size = 50  # Smaller grid size
+grid_size = 20  # Smaller grid size
+
+# Clear the screen once at the beginning
+screen.fill((255, 255, 255))
+pygame.display.flip()
 
 # Main loop
 while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if input_box.collidepoint(event.pos):
-                active = not active
-            else:
-                active = False
-            color = color_active if active else color_inactive
         if event.type == pygame.KEYDOWN:
-            if active:
-                if event.key == pygame.K_RETURN:
-                    screen.fill((255, 255, 255))
+            if event.key == pygame.K_RETURN:
+                if text:
                     draw_encoded_message(text, grid_size)
                     pygame.display.flip()
-                    pygame.time.wait(2000)
-                    screen.fill((255, 255, 255))
-                    text = ''
-                elif event.key == pygame.K_BACKSPACE:
-                    text = text[:-1]
-                elif event.key == pygame.K_v and (event.mod & pygame.KMOD_CTRL):
-                    try:
-                        text += pyperclip.paste()
-                    except Exception as e:
-                        print("Error pasting text:", e)
-                else:
-                    text += event.unicode
+                text = ''
+            elif event.key == pygame.K_BACKSPACE:
+                text = text[:-1]
+            elif event.key == pygame.K_v and (event.mod & pygame.KMOD_CTRL):
+                try:
+                    text += pyperclip.paste()
+                except Exception as e:
+                    print("Error pasting text:", e)
+            else:
+                text += event.unicode
 
     # Render the input box and current text
     txt_surface = font.render(text, True, color)
     input_box.w = max(200, txt_surface.get_width() + 10)
-    screen.fill((255, 255, 255))
+
     screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
     pygame.draw.rect(screen, color, input_box, 2)
 
