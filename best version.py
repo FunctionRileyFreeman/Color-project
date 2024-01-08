@@ -15,33 +15,34 @@ screen = pygame.display.set_mode((width, height), pygame.NOFRAME | pygame.FULLSC
 
 # Define colors
 colors = {
-    "A": (255, 0, 0),       # Apple Red
-    "B": (0, 0, 255),       # Blue
-    "C": (255, 255, 0),     # Canary Yellow
-    "D": (240, 225, 48),    # Dandelion
-    "E": (0, 0, 0),         # Ebony
-    "F": (34, 139, 34),     # Forest Green
-    "G": (128, 128, 128),   # Grey
-    "H": (210, 180, 140),   # Hazel
-    "I": (75, 0, 130),      # Indigo
-    "J": (165, 42, 42),     # Java (Brown)
-    "K": (255, 235, 205),   # Khaki
-    "L": (50, 205, 50),     # Lime Green
-    "M": (255, 0, 255),     # Magenta
-    "N": (165, 42, 42),     # Nut Brown
-    "O": (230, 190, 255),   # Opal
-    "P": (128, 0, 128),     # Purple
-    "Q": (218, 112, 214),   # Quartz (Pink)
-    "R": (255, 0, 0),       # Red
-    "S": (192, 192, 192),   # Silver
-    "T": (0, 128, 128),     # Teal
-    "U": (100, 149, 237),   # Ultramarine
-    "V": (238, 130, 238),   # Violet
-    "W": (123, 191, 123),   # Willow Green
-    "X": (0, 123, 104),     # Xanadu (a shade of green)
-    "Y": (255, 255, 0),     # Yellow
-    "Z": (57, 255, 20),     # Zucchini (Green)
+    "A": (255, 0, 0),  # Apple Red
+    "B": (0, 0, 255),  # Blue
+    "C": (255, 255, 0),  # Canary Yellow
+    "D": (240, 225, 48),  # Dandelion
+    "E": (0, 0, 0),  # Ebony
+    "F": (34, 139, 34),  # Forest Green
+    "G": (128, 128, 128),  # Grey
+    "H": (210, 180, 140),  # Hazel
+    "I": (75, 0, 130),  # Indigo
+    "J": (165, 42, 42),  # Java (Brown)
+    "K": (255, 235, 205),  # Khaki
+    "L": (50, 205, 50),  # Lime Green
+    "M": (255, 0, 255),  # Magenta
+    "N": (165, 42, 42),  # Nut Brown
+    "O": (230, 190, 255),  # Opal
+    "P": (128, 0, 128),  # Purple
+    "Q": (218, 112, 214),  # Quartz (Pink)
+    "R": (255, 0, 0),  # Red
+    "S": (192, 192, 192),  # Silver
+    "T": (0, 128, 128),  # Teal
+    "U": (100, 149, 237),  # Ultramarine
+    "V": (238, 130, 238),  # Violet
+    "W": (123, 191, 123),  # Willow Green
+    "X": (0, 123, 104),  # Xanadu (a shade of green)
+    "Y": (255, 255, 0),  # Yellow
+    "Z": (57, 255, 20),  # Zucchini (Green)
 }
+
 
 # Function to draw the encoded message with custom designs for ",", "-", and "#"
 def draw_encoded_message(message, grid_size):
@@ -58,17 +59,23 @@ def draw_encoded_message(message, grid_size):
         if char == ",":
             pygame.draw.arc(screen, (0, 0, 0), (x_pos, y_pos + grid_size - 15, grid_size, 15), 0, 3.14159265359, 2)
         elif char == "-":
-            pygame.draw.line(screen, (0, 0, 0), (x_pos, y_pos + grid_size // 2), (x_pos + grid_size, y_pos + grid_size // 2), 2)
+            pygame.draw.line(screen, (0, 0, 0), (x_pos, y_pos + grid_size // 2),
+                             (x_pos + grid_size, y_pos + grid_size // 2), 2)
         elif char == "#":
             line_thickness = 2
-            pygame.draw.line(screen, (0, 0, 0), (x_pos + line_thickness, y_pos + line_thickness), (x_pos + grid_size - line_thickness, y_pos + line_thickness), line_thickness)
-            pygame.draw.line(screen, (0, 0, 0), (x_pos + line_thickness, y_pos + grid_size // 4), (x_pos + grid_size - line_thickness, y_pos + grid_size // 4), line_thickness)
-            pygame.draw.line(screen, (0, 0, 0), (x_pos + line_thickness, y_pos + grid_size // 2), (x_pos + grid_size - line_thickness, y_pos + grid_size // 2), line_thickness)
-            pygame.draw.line(screen, (0, 0, 0), (x_pos + line_thickness, y_pos + grid_size // 4 * 3), (x_pos + grid_size - line_thickness, y_pos + grid_size // 4 * 3), line_thickness)
+            pygame.draw.line(screen, (0, 0, 0), (x_pos + line_thickness, y_pos + line_thickness),
+                             (x_pos + grid_size - line_thickness, y_pos + line_thickness), line_thickness)
+            pygame.draw.line(screen, (0, 0, 0), (x_pos + line_thickness, y_pos + grid_size // 4),
+                             (x_pos + grid_size - line_thickness, y_pos + grid_size // 4), line_thickness)
+            pygame.draw.line(screen, (0, 0, 0), (x_pos + line_thickness, y_pos + grid_size // 2),
+                             (x_pos + grid_size - line_thickness, y_pos + grid_size // 2), line_thickness)
+            pygame.draw.line(screen, (0, 0, 0), (x_pos + line_thickness, y_pos + grid_size // 4 * 3),
+                             (x_pos + grid_size - line_thickness, y_pos + grid_size // 4 * 3), line_thickness)
 
         # Draw the design for "!"
         elif char == "!":
-            pygame.draw.line(screen, (0, 0, 0), (x_pos + grid_size // 2, y_pos + grid_size // 2), (x_pos + grid_size // 2, y_pos + grid_size - 2), 2)
+            pygame.draw.line(screen, (0, 0, 0), (x_pos + grid_size // 2, y_pos + grid_size // 2),
+                             (x_pos + grid_size // 2, y_pos + grid_size - 2), 2)
 
         # Draw the design for "."
         elif char == ".":
@@ -80,6 +87,7 @@ def draw_encoded_message(message, grid_size):
 
         if char.isupper():
             pygame.draw.rect(screen, (0, 0, 0), (x_pos, y_pos, grid_size, grid_size), 3)
+
 
 # Text input box settings
 font = pygame.font.Font(None, 32)
